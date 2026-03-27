@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALEXIS + WILL | 10.24.27</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@800&family=Outfit:wght@300;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --lime: #d4ff00; --moss: #081a14; }
+        body { 
+            background-color: var(--moss); 
+            color: white; 
+            font-family: 'Outfit', sans-serif;
+            overflow: hidden;
+            cursor: crosshair;
+        }
+        
+        /* Floating Canvas Layer */
+        #garden-floor {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+        }
+
+        /* Main Info Block - Elevated */
+        .info-container {
+            position: relative;
+            z-index: 10;
+            pointer-events: none; /* Let clicks pass through to the garden */
+        }
+
+        .hero-text {
+            font-family: 'Syne', sans-serif;
+            line-height: 0.85;
+            letter-spacing: -0.04em;
+        }
+
+        .planted-flower {
+            position: absolute;
+            pointer-events: none;
+            z-index: 2;
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            animation: drift 8s infinite ease-in-out;
+        }
+
+        @keyframes drift {
+            0%, 100% { transform: translate(0,0) rotate(0deg); }
+            50% { transform: translate(10px, -15px) rotate(10deg); }
+        }
+
+        /* Subtle Grain for Texture */
+        .grain {
+            position: fixed;
+            inset: 0;
+            z-index: 20;
+            pointer-events: none;
+            opacity: 0.05;
+            background: url('https://grainy-gradients.vercel.app/noise.svg');
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+
+    <div class="grain"></div>
+    <div id="garden-floor"></div>
+
+    <main class="info-container text-center select-none">
+        
+        <div class="mb-6 inline-block px-4 py-1 border border-white/20 rounded-full text-[10px] tracking-[0.4em] uppercase opacity-70">
+            Save the Date
+        </div>
+
+        <h1 class="hero-text text-[15vw] md:text-[12vw] font-black uppercase">
+            Alexis<br>
+            <span class="text-[--lime]">+</span> Will
+        </h1>
+
+        <div class="mt-8 space-y-2">
+            <p class="text-4xl md:text-6xl font-black tracking-tighter italic">
+                OCTOBER 24, 2027
+            </p>
+            <p class="text-lg md:text-2xl font-light tracking-[0.3em] uppercase opacity-60">
+                Ethereal Gardens, Escondido
+            </p>
+        </div>
+
+        <div class="mt-16 pointer-events-auto">
+            <p class="text-[10px] uppercase tracking-[0.5em] opacity-40 animate-pulse">
+                Click the screen to plant a flower
+            </p>
+        </div>
+    </main>
+
+    <script>
+        const floor = document.getElementById('garden-floor');
+        const flowers = ['🌸', '🌼', '🌷', '🌿', '🌱', '✨'];
+
+        // Mouse Tracker for Parallax
+        document.addEventListener('mousemove', (e) => {
+            const moveX = (e.clientX - window.innerWidth / 2) * -0.02;
+            const moveY = (e.clientY - window.innerHeight / 2) * -0.02;
+            document.querySelector('.info-container').style.transform = `translate(${moveX}px, ${moveY}px)`;
+        });
+
+        // Click to Plant Interaction
+        document.addEventListener('mousedown', (e) => {
+            const flower = document.createElement('div');
+            const type = flowers[Math.floor(Math.random() * flowers.length)];
+            
+            flower.innerHTML = type;
+            flower.className = 'planted-flower text-4xl md:text-6xl';
+            flower.style.left = e.pageX + 'px';
+            flower.style.top = e.pageY + 'px';
+            
+            // Start invisible and small
+            flower.style.transform = 'scale(0) rotate(-45deg)';
+            flower.style.opacity = '0';
+            
+            floor.appendChild(flower);
+
+            // Pop into existence
+            setTimeout(() => {
+                const scale = 0.5 + Math.random() * 1.2;
+                const rotate = (Math.random() - 0.5) * 60;
+                flower.style.transform = `scale(${scale}) rotate(${rotate}deg)`;
+                flower.style.opacity = '0.7';
+            }, 50);
+        });
+    </script>
+</body>
+</html>
