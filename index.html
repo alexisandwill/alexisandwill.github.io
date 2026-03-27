@@ -14,20 +14,22 @@
             font-family: 'Outfit', sans-serif;
             overflow: hidden;
             cursor: crosshair;
+            /* Prevent pulling to refresh or bouncing on mobile */
+            touch-action: none; 
         }
         
-        /* Floating Canvas Layer */
         #garden-floor {
             position: fixed;
             inset: 0;
             z-index: 1;
         }
 
-        /* Main Info Block - Elevated */
         .info-container {
             position: relative;
             z-index: 10;
-            pointer-events: none; /* Let clicks pass through to the garden */
+            pointer-events: none;
+            /* Smooth return to center if window is resized */
+            transition: transform 0.1s ease-out;
         }
 
         .hero-text {
@@ -42,6 +44,10 @@
             z-index: 2;
             transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
             animation: drift 8s infinite ease-in-out;
+            /* Center the emoji on the click point */
+            transform-origin: center;
+            margin-left: -20px;
+            margin-top: -20px;
         }
 
         @keyframes drift {
@@ -49,7 +55,6 @@
             50% { transform: translate(10px, -15px) rotate(10deg); }
         }
 
-        /* Subtle Grain for Texture */
         .grain {
             position: fixed;
             inset: 0;
@@ -87,7 +92,7 @@
 
         <div class="mt-16 pointer-events-auto">
             <p class="text-[10px] uppercase tracking-[0.5em] opacity-40 animate-pulse">
-                Click the screen to plant a flower
+                Click or tap to plant a flower
             </p>
         </div>
     </main>
@@ -95,38 +100,52 @@
     <script>
         const floor = document.getElementById('garden-floor');
         const flowers = ['🌸', '🌼', '🌷', '🌿', '🌱', '✨'];
+        const info = document.querySelector('.info-container');
 
-        // Mouse Tracker for Parallax
+        // Mouse Tracker for Parallax (Desktop Only)
         document.addEventListener('mousemove', (e) => {
-            const moveX = (e.clientX - window.innerWidth / 2) * -0.02;
-            const moveY = (e.clientY - window.innerHeight / 2) * -0.02;
-            document.querySelector('.info-container').style.transform = `translate(${moveX}px, ${moveY}px)`;
+            // Only move if screen is wider than 768px (standard mobile breakpoint)
+            if (window.innerWidth > 768) {
+                const moveX = (e.clientX - window.innerWidth / 2) * -0.02;
+                const moveY = (e.clientY - window.innerHeight / 2) * -0.02;
+                info.style.transform = `translate(${moveX}px, ${moveY}px)`;
+            } else {
+                // Reset transform if switching between desktop and mobile views
+                info.style.transform = `translate(0, 0)`;
+            }
         });
 
-        // Click to Plant Interaction
-        document.addEventListener('mousedown', (e) => {
+        // Click/Tap to Plant Interaction
+        function plantFlower(e) {
+            // Get coordinates for both mouse and touch
+            const char = e.touches ? e.touches[0] : e;
+            
             const flower = document.createElement('div');
             const type = flowers[Math.floor(Math.random() * flowers.length)];
             
             flower.innerHTML = type;
             flower.className = 'planted-flower text-4xl md:text-6xl';
-            flower.style.left = e.pageX + 'px';
-            flower.style.top = e.pageY + 'px';
+            flower.style.left = char.pageX + 'px';
+            flower.style.top = char.pageY + 'px';
             
-            // Start invisible and small
             flower.style.transform = 'scale(0) rotate(-45deg)';
             flower.style.opacity = '0';
             
             floor.appendChild(flower);
 
-            // Pop into existence
             setTimeout(() => {
                 const scale = 0.5 + Math.random() * 1.2;
                 const rotate = (Math.random() - 0.5) * 60;
                 flower.style.transform = `scale(${scale}) rotate(${rotate}deg)`;
                 flower.style.opacity = '0.7';
             }, 50);
-        });
+        }
+
+        document.addEventListener('mousedown', plantFlower);
+        document.addEventListener('touchstart', (e) => {
+            // Prevent default zooming/scrolling behavior when tapping
+            plantFlower(e);
+        }, { passive: false });
     </script>
 </body>
 </html>
