@@ -14,20 +14,15 @@
         }
         
         body { 
-            background: linear-gradient(-45deg, #0f1c08, #1b3310, #3B520F, #2d4514);
-            background-size: 400% 400%;
-            animation: gardenShift 20s ease infinite;
+            /* Added a dark, semi-transparent overlay to keep the text legible against the painting */
+            background: linear-gradient(rgba(15, 28, 8, 0.5), rgba(27, 51, 16, 0.6)), 
+                        url('https://upload.wikimedia.org/wikipedia/commons/a/a4/Monet_-_Jardin_des_Tuileries_-1875.jpg?_=20090701093748') no-repeat center center fixed;
+            background-size: cover;
             color: var(--text-color); 
             font-family: 'Futura', 'Trebuchet MS', Arial, sans-serif;
             overflow: hidden;
             cursor: crosshair;
             touch-action: none; 
-        }
-
-        @keyframes gardenShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
         }
         
         #garden-floor {
@@ -119,7 +114,7 @@
         </div>
 
         <div class="mt-20 pointer-events-auto">
-            <p class="text-[10px] font-light uppercase tracking-[0.5em] opacity-40 animate-pulse cursor-pointer">
+            <p class="text-[10px] font-light uppercase tracking-[0.5em] text-white/80 cursor-pointer">
                 Tap to plant a flower
             </p>
         </div>
