@@ -14,33 +14,61 @@
         }
         
         body { 
-            /* Added a dark, semi-transparent overlay to keep the text legible against the painting */
             background: linear-gradient(rgba(15, 28, 8, 0.5), rgba(27, 51, 16, 0.6)), 
                         url('https://upload.wikimedia.org/wikipedia/commons/a/a4/Monet_-_Jardin_des_Tuileries_-1875.jpg?_=20090701093748') no-repeat center center fixed;
             background-size: cover;
             color: var(--text-color); 
             font-family: 'Futura', 'Trebuchet MS', Arial, sans-serif;
-            overflow: hidden;
+            min-height: 100vh;
             cursor: crosshair;
-            touch-action: none; 
+            overflow-x: hidden;
         }
         
         #garden-floor {
             position: fixed;
             inset: 0;
             z-index: 1;
+            pointer-events: none;
         }
 
         .info-container {
             position: relative;
             z-index: 10;
             pointer-events: none;
+            padding: 4rem 1rem;
         }
 
         .hero-text {
             font-family: 'Pinyon Script', cursive;
             line-height: 0.9;
             font-weight: 400;
+        }
+
+        /* Carousel Styles */
+        .carousel-container {
+            pointer-events: auto;
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            aspect-ratio: 4 / 5;
+            margin: 2rem auto;
+            overflow: hidden;
+            border-radius: 4px;
+            border: 1px solid rgba(202, 205, 120, 0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .carousel-slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .carousel-slide.active {
+            opacity: 1;
         }
 
         .planted-flower {
@@ -81,22 +109,22 @@
         }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen">
+<body class="flex items-start justify-center">
 
     <div class="grain"></div>
     <div id="garden-floor"></div>
 
-    <main class="info-container text-center select-none w-full px-4">
+    <main class="info-container text-center select-none w-full">
         
         <div class="mb-6 inline-block px-4 py-1 border border-[#CACD78]/30 rounded-full text-[10px] font-light tracking-[0.4em] uppercase opacity-70">
             Save the Date
         </div>
 
-        <h1 class="hero-text text-[24vw] md:text-[12vw] text-center filter drop-shadow-lg">
-            Alexis <span class="text-[14vw] md:text-[6vw] opacity-40 italic">&</span> Will
+        <h1 class="hero-text text-[24vw] md:text-[10vw] text-center filter drop-shadow-lg">
+            Alexis <span class="text-[14vw] md:text-[5vw] opacity-40 italic">&</span> Will
         </h1>
 
-        <div class="mt-8 md:mt-12 space-y-2">
+        <div class="mt-8 md:mt-6 space-y-2">
              <p class="text-lg md:text-2xl font-light tracking-[0.3em] uppercase text-white/80">
                 OCTOBER 24, 2027
             </p>
@@ -105,7 +133,7 @@
             </p>
         </div>
 
-        <div class="mt-12">
+        <div class="mt-8">
             <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Alexis+%26+Will%27s+Wedding&dates=20271024/20271025&location=Ethereal+Gardens,+Escondido,+CA" 
                target="_blank" 
                class="calendar-btn inline-block px-12 py-4 bg-[#CACD78]/10 border border-[#CACD78]/40 rounded-full text-xs font-medium text-[#CACD78] tracking-[0.3em] uppercase">
@@ -113,46 +141,68 @@
             </a>
         </div>
 
-        <div class="mt-20 pointer-events-auto">
-            <p class="text-[10px] font-light uppercase tracking-[0.5em] text-white/80 cursor-pointer">
-                Tap to plant a flower
-            </p>
+        <div class="carousel-container mt-12">
+            <div class="carousel-slide active" style="background-image: url('proposal.jpg')"></div>
+            <div class="carousel-slide" style="background-image: url('together.jpg')"></div>
+            <div class="carousel-slide" style="background-image: url('outside.jpg')"></div>
+            <div class="carousel-slide" style="background-image: url('dance.jpg')"></div>
         </div>
+
+        <!-- <div class="mt-10 pointer-events-auto">
+            <p class="text-[10px] font-light uppercase tracking-[0.5em] text-white/80 cursor-pointer">
+                Tap anywhere to plant a flower
+            </p>
+        </div> -->
     </main>
 
     <script>
-        const floor = document.getElementById('garden-floor');
-        const flowers = ['🌸', '🌼', '🌷', '🌿', '🌱', '✨'];
+        // Carousel Logic
+        const slides = document.querySelectorAll('.carousel-slide');
+        let currentSlide = 0;
 
-        function plantFlower(e) {
-            if (e.target.closest('.calendar-btn')) return;
-
-            const char = e.touches ? e.touches[0] : e;
-            const flower = document.createElement('div');
-            const type = flowers[Math.floor(Math.random() * flowers.length)];
-            
-            flower.innerHTML = type;
-            flower.className = 'planted-flower text-4xl md:text-6xl';
-            flower.style.left = char.pageX + 'px';
-            flower.style.top = char.pageY + 'px';
-            
-            flower.style.transform = 'scale(0) rotate(-45deg)';
-            flower.style.opacity = '0';
-            
-            floor.appendChild(flower);
-
-            setTimeout(() => {
-                const scale = 0.5 + Math.random() * 1.2;
-                const rotate = (Math.random() - 0.5) * 60;
-                flower.style.transform = `scale(${scale}) rotate(${rotate}deg)`;
-                flower.style.opacity = '0.8';
-            }, 50);
+        function nextSlide() {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
         }
 
-        document.addEventListener('mousedown', plantFlower);
-        document.addEventListener('touchstart', (e) => {
-            plantFlower(e);
-        }, { passive: false });
+        setInterval(nextSlide, 4000); // Changes photo every 4 seconds
+
+        // Flower Planting Logic
+        // const floor = document.getElementById('garden-floor');
+        // const flowers = ['🌸', '🌼', '🌷', '🌿', '🌱', '✨'];
+
+        // function plantFlower(e) {
+        //     // Don't plant if clicking buttons or carousel
+        //     if (e.target.closest('.calendar-btn') || e.target.closest('.carousel-container')) return;
+
+        //     const char = e.touches ? e.touches[0] : e;
+        //     const flower = document.createElement('div');
+        //     const type = flowers[Math.floor(Math.random() * flowers.length)];
+            
+        //     flower.innerHTML = type;
+        //     flower.className = 'planted-flower text-4xl md:text-6xl';
+        //     flower.style.left = char.pageX + 'px';
+        //     flower.style.top = char.pageY + 'px';
+            
+        //     flower.style.transform = 'scale(0) rotate(-45deg)';
+        //     flower.style.opacity = '0';
+            
+        //     floor.appendChild(flower);
+
+        //     setTimeout(() => {
+        //         const scale = 0.5 + Math.random() * 1.2;
+        //         const rotate = (Math.random() - 0.5) * 60;
+        //         flower.style.transform = `scale(${scale}) rotate(${rotate}deg)`;
+        //         flower.style.opacity = '0.8';
+        //     }, 50);
+        // }
+
+        // document.addEventListener('mousedown', plantFlower);
+        // document.addEventListener('touchstart', (e) => {
+        //     // Note: Removed preventDefault to allow scrolling on mobile
+        //     plantFlower(e);
+        // }, { passive: true });
     </script>
 </body>
 </html>
