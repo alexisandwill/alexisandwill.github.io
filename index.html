@@ -3,19 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALEXIS + WILL | 10.24.27</title>
+    <title>Alexis & Will | 10.24.27</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@800&family=Outfit:wght@300;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&display=swap" rel="stylesheet">
     <style>
-        :root { --lime: #d4ff00; --moss: #081a14; }
+        :root { 
+            --text-color: #CACD78; 
+            --hover-bg: #CACD78;
+            --hover-text: #0f1c08;
+        }
+        
         body { 
-            background-color: var(--moss); 
-            color: white; 
-            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(-45deg, #0f1c08, #1b3310, #3B520F, #2d4514);
+            background-size: 400% 400%;
+            animation: gardenShift 20s ease infinite;
+            color: var(--text-color); 
+            font-family: 'Futura', 'Trebuchet MS', Arial, sans-serif;
             overflow: hidden;
             cursor: crosshair;
-            /* Prevent pulling to refresh or bouncing on mobile */
             touch-action: none; 
+        }
+
+        @keyframes gardenShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         
         #garden-floor {
@@ -28,14 +40,12 @@
             position: relative;
             z-index: 10;
             pointer-events: none;
-            /* Smooth return to center if window is resized */
-            transition: transform 0.1s ease-out;
         }
 
         .hero-text {
-            font-family: 'Syne', sans-serif;
-            line-height: 0.85;
-            letter-spacing: -0.04em;
+            font-family: 'Pinyon Script', cursive;
+            line-height: 0.9;
+            font-weight: 400;
         }
 
         .planted-flower {
@@ -44,7 +54,6 @@
             z-index: 2;
             transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
             animation: drift 8s infinite ease-in-out;
-            /* Center the emoji on the click point */
             transform-origin: center;
             margin-left: -20px;
             margin-top: -20px;
@@ -63,6 +72,19 @@
             opacity: 0.05;
             background: url('https://grainy-gradients.vercel.app/noise.svg');
         }
+
+        .calendar-btn {
+            pointer-events: auto;
+            /* Transition only background and color, no transform/movement */
+            transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+            backdrop-filter: blur(4px);
+        }
+        
+        .calendar-btn:hover {
+            background-color: var(--hover-bg);
+            color: var(--hover-text);
+            border-color: var(--hover-bg);
+        }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen">
@@ -70,29 +92,36 @@
     <div class="grain"></div>
     <div id="garden-floor"></div>
 
-    <main class="info-container text-center select-none">
+    <main class="info-container text-center select-none w-full px-4">
         
-        <div class="mb-6 inline-block px-4 py-1 border border-white/20 rounded-full text-[10px] tracking-[0.4em] uppercase opacity-70">
+        <div class="mb-6 inline-block px-4 py-1 border border-[#CACD78]/30 rounded-full text-[10px] font-light tracking-[0.4em] uppercase opacity-70">
             Save the Date
         </div>
 
-        <h1 class="hero-text text-[15vw] md:text-[12vw] font-black uppercase">
-            Alexis<br>
-            <span class="text-[--lime]">+</span> Will
+        <h1 class="hero-text text-[24vw] md:text-[12vw] text-center filter drop-shadow-lg">
+            Alexis <span class="text-[14vw] md:text-[6vw] opacity-40 italic">&</span> Will
         </h1>
 
-        <div class="mt-8 space-y-2">
-             <p class="text-lg md:text-2xl font-light tracking-[0.3em] uppercase opacity-60">
+        <div class="mt-8 md:mt-12 space-y-2">
+             <p class="text-lg md:text-2xl font-light tracking-[0.3em] uppercase opacity-80">
                 OCTOBER 24, 2027
             </p>
-            <p class="text-lg md:text-2xl font-light tracking-[0.3em] uppercase opacity-60">
-                Ethereal Gardens, Escondido
+            <p class="text-lg md:text-2xl font-light tracking-[0.3em] uppercase opacity-80 md:whitespace-nowrap">
+                Ethereal Gardens, Escondido, CA
             </p>
         </div>
 
-        <div class="mt-16 pointer-events-auto">
-            <p class="text-[10px] uppercase tracking-[0.5em] opacity-40 animate-pulse">
-                Click or tap to plant a flower
+        <div class="mt-12">
+            <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Alexis+%26+Will%27s+Wedding&dates=20271024/20271025&location=Ethereal+Gardens,+Escondido,+CA" 
+               target="_blank" 
+               class="calendar-btn inline-block px-12 py-4 bg-[#CACD78]/10 border border-[#CACD78]/40 rounded-full text-xs font-medium text-[#CACD78] tracking-[0.3em] uppercase">
+                Add to Calendar
+            </a>
+        </div>
+
+        <div class="mt-20 pointer-events-auto">
+            <p class="text-[10px] font-light uppercase tracking-[0.5em] opacity-40 animate-pulse cursor-pointer">
+                Tap to plant a flower
             </p>
         </div>
     </main>
@@ -100,26 +129,11 @@
     <script>
         const floor = document.getElementById('garden-floor');
         const flowers = ['🌸', '🌼', '🌷', '🌿', '🌱', '✨'];
-        const info = document.querySelector('.info-container');
 
-        // Mouse Tracker for Parallax (Desktop Only)
-        document.addEventListener('mousemove', (e) => {
-            // Only move if screen is wider than 768px (standard mobile breakpoint)
-            if (window.innerWidth > 768) {
-                const moveX = (e.clientX - window.innerWidth / 2) * -0.02;
-                const moveY = (e.clientY - window.innerHeight / 2) * -0.02;
-                info.style.transform = `translate(${moveX}px, ${moveY}px)`;
-            } else {
-                // Reset transform if switching between desktop and mobile views
-                info.style.transform = `translate(0, 0)`;
-            }
-        });
-
-        // Click/Tap to Plant Interaction
         function plantFlower(e) {
-            // Get coordinates for both mouse and touch
+            if (e.target.closest('.calendar-btn')) return;
+
             const char = e.touches ? e.touches[0] : e;
-            
             const flower = document.createElement('div');
             const type = flowers[Math.floor(Math.random() * flowers.length)];
             
@@ -137,13 +151,12 @@
                 const scale = 0.5 + Math.random() * 1.2;
                 const rotate = (Math.random() - 0.5) * 60;
                 flower.style.transform = `scale(${scale}) rotate(${rotate}deg)`;
-                flower.style.opacity = '0.7';
+                flower.style.opacity = '0.8';
             }, 50);
         }
 
         document.addEventListener('mousedown', plantFlower);
         document.addEventListener('touchstart', (e) => {
-            // Prevent default zooming/scrolling behavior when tapping
             plantFlower(e);
         }, { passive: false });
     </script>
