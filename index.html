@@ -18,6 +18,9 @@
       height: 100vh; 
       overflow: hidden; 
       font-family: 'Futura', 'Trebuchet MS', Arial, sans-serif;
+      
+      /* NEW: Flower emoji cursor for the whole page */
+      cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><text x='50%' y='50%' dominant-baseline='central' text-anchor='middle' font-size='24'>🌸</text></svg>") 16 16, auto;
     }
 
     .centered-image {
@@ -42,13 +45,15 @@
       border-radius: 40px; /* Pill shape */
       transition: all 0.3s ease; /* smoothly transition all style changes */
       flex-shrink: 0; /* Prevents the button itself from shrinking */
+      
+      /* NEW: Keep the flower emoji cursor when hovering over the button */
+      cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><text x='50%' y='50%' dominant-baseline='central' text-anchor='middle' font-size='24'>🌸</text></svg>") 16 16, pointer; 
     }
 
     /* Modified hover state: make it solid dark with white text, just like original, but as inversion */
     .calendar-btn:hover {
       background-color: #1a1a1a; /* make solid fill on hover */
       color: #ffffff; /* change text to white on hover */
-      /* opacity: 0.7; - I've removed the fading for solid hover as inversion is clearer, but you can put it back if preferred */
     }
   </style>
 </head>
