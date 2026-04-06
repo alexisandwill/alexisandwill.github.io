@@ -25,9 +25,10 @@
 
     .centered-image {
       max-width: 100%; 
-      height: 100%; /* Tells the image to take up the remaining space */
-      min-height: 0; /* Allows the image to shrink so the button fits */
-      object-fit: contain; 
+      /* MODIFIED: Let the height adjust automatically so the bounding box hugs the image */
+      height: auto; 
+      /* Calculates 100% of screen height minus padding (80px), gap (24px), and button (~50px) */
+      max-height: calc(100vh - 160px); 
     }
 
     /* Styling for the Add to Calendar button */
