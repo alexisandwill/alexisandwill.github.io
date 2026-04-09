@@ -7,55 +7,79 @@
   <link rel="icon" type="image/x-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><text x='50%' y='50%' dominant-baseline='central' text-anchor='middle' font-size='32'>🌸</text></svg>">
   <style>
     body {
-      background-color: white;
+      background-color: #FFF; /* #93A75C */
       margin: 0;
       padding: 40px; 
       box-sizing: border-box; 
       display: flex;
-      flex-direction: column; /* Stacks the image and button vertically */
+      flex-direction: column; 
       justify-content: center;
       align-items: center;
-      gap: 24px; /* Adds space between the image and the button */
+      gap: 20px; 
       height: 100vh; 
       overflow: hidden; 
       font-family: 'Futura', 'Trebuchet MS', Arial, sans-serif;
       
-      /* NEW: Flower emoji cursor for the whole page */
-      cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><text x='50%' y='50%' dominant-baseline='central' text-anchor='middle' font-size='24'>🌸</text></svg>") 16 16, auto;
+      /* Flower emoji cursor for the whole page */
+      cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'><text x='50%' y='50%' dominant-baseline='central' text-anchor='middle' font-size='36'>🌸</text></svg>") 24 24, auto;
+      
+      position: relative;
     }
 
     .centered-image {
       max-width: 100%; 
-      /* MODIFIED: Let the height adjust automatically so the bounding box hugs the image */
       height: auto; 
-      /* Calculates 100% of screen height minus padding (80px), gap (24px), and button (~50px) */
-      max-height: calc(100vh - 160px); 
+      max-height: calc(100vh - 180px); 
+      z-index: 10; 
     }
 
-    /* Styling for the Add to Calendar button */
     .calendar-btn {
       padding: 14px 32px;
-      /* Modified: add border and change colors for outline button */
-      border: 1px solid #1a1a1a; /* add a dark outline */
-      background-color: transparent; /* no fill (transparent) */
-      color: #1a1a1a; /* change text color to match border/dark theme */
+      border: 1px solid #1a1a1a; 
+      background-color: transparent; 
+      color: #1a1a1a; 
       
       text-decoration: none;
       text-transform: uppercase;
       letter-spacing: 0.15em;
       font-size: 12px;
-      border-radius: 40px; /* Pill shape */
-      transition: all 0.3s ease; /* smoothly transition all style changes */
-      flex-shrink: 0; /* Prevents the button itself from shrinking */
+      border-radius: 40px; 
+      transition: all 0.3s ease; 
+      flex-shrink: 0; 
+      z-index: 10; 
       
-      /* NEW: Keep the flower emoji cursor when hovering over the button */
-      cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><text x='50%' y='50%' dominant-baseline='central' text-anchor='middle' font-size='24'>🌸</text></svg>") 16 16, pointer; 
+      /* Keep the flower emoji cursor when hovering over the button */
+      cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'><text x='50%' y='50%' dominant-baseline='central' text-anchor='middle' font-size='36'>🌸</text></svg>") 24 24, pointer; 
     }
 
-    /* Modified hover state: make it solid dark with white text, just like original, but as inversion */
     .calendar-btn:hover {
-      background-color: #1a1a1a; /* make solid fill on hover */
-      color: #ffffff; /* change text to white on hover */
+      background-color: #1a1a1a; 
+      color: #ffffff; 
+    }
+
+    .tertiary-text {
+      font-size: 11px; 
+      color: #8c998c; /* Slightly tinted the grey to match the green background better */
+      text-transform: uppercase; 
+      margin: 0; 
+      margin-top: -8px; 
+      letter-spacing: 0.1em; 
+      text-align: center;
+      z-index: 10;
+      pointer-events: none; 
+    }
+
+    .planted-flower {
+      position: absolute;
+      pointer-events: none; 
+      font-size: 36px; 
+      transform: translate(-50%, -50%);
+      animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    @keyframes popIn {
+      0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
     }
   </style>
 </head>
@@ -68,6 +92,25 @@
      class="calendar-btn">
     Add to Calendar
   </a>
+
+  <p class="tertiary-text">Click or Tap to Plant Flowers on the Screen</p>
+
+  <script>
+    document.addEventListener('click', function(e) {
+      if (e.target !== document.body) return;
+
+      const flower = document.createElement('div');
+      flower.classList.add('planted-flower');
+      
+      const flowers = ['🌸', '🌺', '🌷', '🌼', '🪷', '✨'];
+      flower.innerText = flowers[Math.floor(Math.random() * flowers.length)];
+      
+      flower.style.left = e.pageX + 'px';
+      flower.style.top = e.pageY + 'px';
+      
+      document.body.appendChild(flower);
+    });
+  </script>
 
 </body>
 </html>
