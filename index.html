@@ -27,11 +27,42 @@
       position: relative;
     }
 
+    /* Loading Spinner Styles */
+    .flower-spinner {
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      font-size: 48px;
+      z-index: 20;
+      pointer-events: none;
+      animation: spinFlower 1.2s linear infinite;
+      transition: opacity 0.5s ease-out;
+    }
+
+    .flower-spinner.hidden {
+      opacity: 0;
+    }
+
+    @keyframes spinFlower {
+      0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+      }
+      100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+      }
+    }
+
     .centered-image {
       max-width: 100%; 
       height: auto; 
       max-height: calc(100vh - 180px); 
       z-index: 10; 
+      opacity: 0;
+      transition: opacity 1.2s ease-in-out;
+    }
+
+    .centered-image.loaded {
+      opacity: 1;
     }
 
     .calendar-btn {
@@ -82,20 +113,14 @@
       0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
       100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
     }
-
-    img {
-    opacity: 0;
-    transition: opacity 1.5s ease-in-out;
-  }
-
-  img.loaded {
-    opacity: 1;
-  }
   </style>
 </head>
 <body>
   
-  <img src="greencard.webp" alt="Alexis & Will Save the Date" class="centered-image" onload="this.classList.add('loaded')">
+  <!-- Flower Loading Spinner -->
+  <div id="spinner" class="flower-spinner" aria-label="Loading...">🌸</div>
+
+  <img src="greencard.webp" alt="Alexis & Will Save the Date" class="centered-image" id="saveTheDateImg" onload="onImageLoad()">
   
   <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=🌸+Alexis+%26+Will%27s+Wedding+🌸&dates=20271024/20271025&location=Ethereal+Gardens,+Escondido,+CA" 
      target="_blank" 
@@ -106,6 +131,26 @@
   <p class="tertiary-text">Invitation and details to follow<br><br>Click to Plant Flowers on the Screen</p>
 
   <script>
+    function onImageLoad() {
+      const spinner = document.getElementById('spinner');
+      const img = document.getElementById('saveTheDateImg');
+
+      // Hide spinner and reveal image
+      spinner.classList.add('hidden');
+      img.classList.add('loaded');
+
+      // Remove spinner element from DOM after fade-out completes
+      setTimeout(() => {
+        spinner.style.display = 'none';
+      }, 500);
+    }
+
+    // Handle cached images loading instantly before listener attaches
+    const imgElement = document.getElementById('saveTheDateImg');
+    if (imgElement.complete) {
+      onImageLoad();
+    }
+
     document.addEventListener('click', function(e) {
       if (e.target !== document.body) return;
 
