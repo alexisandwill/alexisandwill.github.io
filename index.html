@@ -3,31 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Alexis & Will's Wedding | 10.24.27</title>
+  <title>Alexis &amp; Will's Wedding | 10.24.27</title>
   <link rel="icon" type="image/x-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><text x='50%' y='50%' dominant-baseline='central' text-anchor='middle' font-size='32'>🌸</text></svg>">
   <link rel="preload" as="image" href="greencard.webp" fetchpriority="high">
   <style>
     body {
-      background-color: #FFF; /* #93A75C */
+      background-color: #FFF;
       margin: 0;
-      padding: 40px; 
-      box-sizing: border-box; 
+      padding: 40px;
+      box-sizing: border-box;
       display: flex;
-      flex-direction: column; 
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      gap: 20px; 
-      height: 100vh; 
-      overflow: hidden; 
+      gap: 20px;
+      height: 100vh;
+      overflow: hidden;
       font-family: 'IBM Plex Mono', monospace;
-      
-      /* Flower emoji cursor for the whole page */
       cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'><text x='50%' y='50%' dominant-baseline='central' text-anchor='middle' font-size='36'>🌸</text></svg>") 24 24, auto;
-      
       position: relative;
     }
-
-    /* Loading Spinner Styles */
     .flower-spinner {
       position: absolute;
       top: 40%;
@@ -38,134 +33,218 @@
       animation: spinFlower 1.2s linear infinite;
       transition: opacity 0.5s ease-out;
     }
-
-    .flower-spinner.hidden {
-      opacity: 0;
-    }
-
+    .flower-spinner.hidden { opacity: 0; }
     @keyframes spinFlower {
-      0% {
-        transform: translate(-50%, -50%) rotate(0deg);
-      }
-      100% {
-        transform: translate(-50%, -50%) rotate(360deg);
-      }
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
     }
-
     .centered-image {
-      max-width: 100%; 
-      height: auto; 
-      max-height: calc(100vh - 180px); 
-      z-index: 10; 
+      max-width: 100%;
+      height: auto;
+      max-height: calc(100vh - 220px);
+      z-index: 10;
       opacity: 0;
       transition: opacity 1.2s ease-in-out;
     }
-
-    .centered-image.loaded {
-      opacity: 1;
+    .centered-image.loaded { opacity: 1; }
+    .button-group {
+      display: flex;
+      flex-direction: row;
+      gap: 12px;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+      flex-wrap: wrap;
     }
-
-    .calendar-btn {
+    .calendar-btn, .address-btn {
       padding: 14px 32px;
-      border: 1px solid #606F44; 
-      background-color: transparent; 
-      color: #606F44; 
-      
+      border: 1px solid #606F44;
+      background-color: transparent;
+      color: #606F44;
       text-decoration: none;
       text-transform: uppercase;
       letter-spacing: 0.15em;
       font-size: 12px;
-      border-radius: 40px; 
-      transition: all 0.3s ease; 
-      flex-shrink: 0; 
-      z-index: 10; 
-      
-      /* Keep the flower emoji cursor when hovering over the button */
-      cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'><text x='50%' y='50%' dominant-baseline='central' text-anchor='middle' font-size='36'>🌸</text></svg>") 24 24, pointer; 
+      font-family: inherit;
+      border-radius: 40px;
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+      z-index: 10;
+      cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'><text x='50%' y='50%' dominant-baseline='central' text-anchor='middle' font-size='36'>🌸</text></svg>") 24 24, pointer;
+    }
+    .calendar-btn:hover, .address-btn:hover {
+      background-color: #606F44;
+      color: #ffffff;
     }
 
-    .calendar-btn:hover {
-      background-color: #606F44; 
-      color: #ffffff; 
+    /* Decorative sparkles sit along the edge, clear of the label. */
+    .address-btn { position: relative; overflow: visible; }
+    .button-sparkles {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: inherit;
+    }
+    .button-sparkles .sparkle {
+      position: absolute;
+      width: var(--size, 12px);
+      height: var(--size, 12px);
+      background: #9aa86d;
+      clip-path: polygon(50% 0%, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0% 50%, 38% 38%);
+      opacity: 0;
+      animation: buttonTwinkle 3.2s ease-in-out infinite;
+      animation-delay: var(--delay, 0s);
+    }
+    .sparkle:nth-child(1) { left: 12%; top: -6px; --size: 14px; --delay: -0.2s; }
+    .sparkle:nth-child(2) { left: 48%; top: -4px; --size: 9px; --delay: -1.6s; }
+    .sparkle:nth-child(3) { right: 12%; top: -7px; --size: 16px; --delay: -2.4s; }
+    .sparkle:nth-child(4) { right: -5px; top: 48%; --size: 10px; --delay: -0.9s; }
+    .sparkle:nth-child(5) { right: 25%; bottom: -6px; --size: 12px; --delay: -1.9s; }
+    .sparkle:nth-child(6) { left: 19%; bottom: -5px; --size: 10px; --delay: -2.8s; }
+    .sparkle:nth-child(7) { left: -7px; top: 32%; --size: 14px; --delay: -1.3s; }
+    .address-btn:hover .sparkle, .address-btn:focus-visible .sparkle { background: #c3cd94; }
+    @keyframes buttonTwinkle {
+      0%, 55%, 100% { opacity: 0; transform: scale(0.25) rotate(-20deg); }
+      20% { opacity: 1; transform: scale(1) rotate(0deg); }
+      35% { opacity: 0.65; transform: scale(0.75) rotate(15deg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .button-sparkles .sparkle { animation: none; opacity: 0.65; transform: scale(0.8); }
     }
 
     .tertiary-text {
-      font-size: 11px; 
-      color: #8c998c; /* Slightly tinted the grey to match the green background better */
-      text-transform: uppercase; 
-      margin: 0; 
-      margin-top: -8px; 
-      letter-spacing: 0.1em; 
+      font-size: 11px;
+      color: #8c998c;
+      text-transform: uppercase;
+      margin: 0;
+      margin-top: -8px;
+      letter-spacing: 0.1em;
       text-align: center;
       z-index: 10;
-      pointer-events: none; 
+      pointer-events: none;
     }
-
     .planted-flower {
       position: absolute;
-      pointer-events: none; 
-      font-size: 36px; 
+      pointer-events: none;
+      font-size: 36px;
       transform: translate(-50%, -50%);
       animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
-
     @keyframes popIn {
       0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
       100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
     }
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
+    .modal-content {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 24px 16px 16px 16px;
+      position: relative;
+      max-width: 90vw;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+    }
+    .modal-close-btn {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      background: none;
+      border: none;
+      font-size: 20px;
+      color: #606F44;
+      font-family: inherit;
+      line-height: 1;
+      padding: 4px 8px;
+      transition: opacity 0.2s;
+      cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'><text x='50%' y='50%' dominant-baseline='central' text-anchor='middle' font-size='36'>🌸</text></svg>") 24 24, pointer;
+    }
+    .modal-close-btn:hover { opacity: 0.6; }
+    .modal-iframe { width: 640px; max-width: 100%; height: 75vh; border: 0; border-radius: 8px; }
   </style>
 </head>
 <body>
-  
-  <!-- Flower Loading Spinner -->
   <div id="spinner" class="flower-spinner" aria-label="Loading...">🌸</div>
-
-  <img src="greencard.webp" alt="Alexis & Will Save the Date" class="centered-image" id="saveTheDateImg" onload="onImageLoad()">
-  
-  <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=🌸+Alexis+%26+Will%27s+Wedding+🌸&dates=20271024/20271025&location=Ethereal+Gardens,+Escondido,+CA" 
-     target="_blank" 
-     class="calendar-btn">
-    <b>Add to Calendar</b>
-  </a>
-
+  <img src="greencard.webp" alt="Alexis &amp; Will Save the Date" class="centered-image" id="saveTheDateImg" onload="onImageLoad()">
+  <div class="button-group">
+    <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=🌸+Alexis+%26+Will%27s+Wedding+🌸&dates=20271024/20271025&location=Ethereal+Gardens,+Escondido,+CA" target="_blank" class="calendar-btn">
+      <strong>Add to Calendar</strong>
+    </a>
+    <button class="address-btn" id="openFormBtn" type="button">
+      <span class="button-sparkles" aria-hidden="true">
+        <span class="sparkle"></span><span class="sparkle"></span>
+        <span class="sparkle"></span><span class="sparkle"></span>
+        <span class="sparkle"></span><span class="sparkle"></span>
+        <span class="sparkle"></span>
+      </span>
+      <strong>Share your contact info</strong>
+    </button>
+  </div>
   <p class="tertiary-text">Invitation and details to follow<br><br>Click to Plant Flowers on the Screen</p>
-
+  <div class="modal-overlay" id="formModal" aria-hidden="true">
+    <div class="modal-content">
+      <button class="modal-close-btn" id="closeFormBtn" aria-label="Close dialog" type="button">✕</button>
+      <iframe class="modal-iframe" src="https://docs.google.com/forms/d/e/1FAIpQLSezs2x8OUHLw3mzcuR9y1rtrf3d5yAfZOdG0onTc1EwrPqGkA/viewform?embedded=true" marginheight="0" marginwidth="0">Loading…</iframe>
+    </div>
+  </div>
   <script>
     function onImageLoad() {
       const spinner = document.getElementById('spinner');
       const img = document.getElementById('saveTheDateImg');
-
-      // Hide spinner and reveal image
       spinner.classList.add('hidden');
       img.classList.add('loaded');
-
-      // Remove spinner element from DOM after fade-out completes
-      setTimeout(() => {
-        spinner.style.display = 'none';
-      }, 500);
+      setTimeout(() => { spinner.style.display = 'none'; }, 500);
     }
-
-    // Handle cached images loading instantly before listener attaches
     const imgElement = document.getElementById('saveTheDateImg');
-    if (imgElement.complete) {
-      onImageLoad();
-    }
-
+    if (imgElement.complete) { onImageLoad(); }
+    const modal = document.getElementById('formModal');
+    const openBtn = document.getElementById('openFormBtn');
+    const closeBtn = document.getElementById('closeFormBtn');
+    openBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      modal.classList.add('active');
+      modal.setAttribute('aria-hidden', 'false');
+    });
+    closeBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      modal.classList.remove('active');
+      modal.setAttribute('aria-hidden', 'true');
+    });
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
+      }
+    });
     document.addEventListener('click', function(e) {
       if (e.target !== document.body) return;
-
       const flower = document.createElement('div');
       flower.classList.add('planted-flower');
-      
       const flowers = ['🌸', '🌺', '🌷', '🌼', '🪷', '✨'];
       flower.innerText = flowers[Math.floor(Math.random() * flowers.length)];
-      
       flower.style.left = e.pageX + 'px';
       flower.style.top = e.pageY + 'px';
-      
       document.body.appendChild(flower);
     });
   </script>
-
 </body>
 </html>
